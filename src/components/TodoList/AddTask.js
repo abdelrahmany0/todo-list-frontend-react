@@ -19,11 +19,14 @@ class AddTask extends Component{
         }
     }
     handleChange = (e) => {
+        let errors = this.state.errors
+        errors[e.target.name].touched = true
         if (!this.checkErrors(e.target.name, e.target.value)) {
             let task = this.state.newTask
             task[e.target.name] = e.target.value
             this.setState({newTask: task})
         }
+        this.setState({errors})
     }
 
     addTask = async () => {
@@ -82,7 +85,9 @@ class AddTask extends Component{
         return false;
     }
 
-    focusOut = (e) => {
+    hideDiv = () => {this.setState({created: false})}
+
+    onFocusHandle = (e) => {
         let name = e.target.name
         let value = e.target.value
         let errors = this.state.errors
@@ -96,9 +101,16 @@ class AddTask extends Component{
             <>
                 <div className="container my-5 text-center">
                     <h2>Add a new Task</h2>
+                    {this.state.created ?
+                        <div id={"hide"} className="alert alert-success updated" role="alert">
+                            Task Created Successfully <i className="bi bi-check2-all"/>
+                            <button type="button" onClick={this.hideDiv} className="btn-close" data-dismiss="alert" aria-label="Close"/>
+                        </div>
+                        : null
+                    }
                     <div className="input-group mb-3">
                         <span className="input-group-text">Task Title:</span>
-                        <input name="name" onBlur={this.focusOut} onChange={this.handleChange} type="text" className="form-control" placeholder="Task Title..." />
+                        <input name="name" onBlur={this.onFocusHandle} onChange={this.handleChange} type="text" className="form-control" placeholder="Task Title..." />
                     </div>
                     {
                         this.state.errors.name.error ?
@@ -109,7 +121,7 @@ class AddTask extends Component{
                     }
                         <span className="input-group-text">Task Description:</span>
                     <div className="input-group mb-3">
-                        <textarea name="description" onBlur={this.focusOut} onChange={this.handleChange} className="form-control" placeholder="Task Description..."
+                        <textarea name="description" onBlur={this.onFocusHandle} onChange={this.handleChange} className="form-control" placeholder="Task Description..."
                             cols={30} rows={2}
                         />
                     </div>
@@ -123,14 +135,15 @@ class AddTask extends Component{
                     {
                         this.state.mainError ?
                             <div className="alert alert-danger w-100 p-0">
-                                <p className="p-2 m-0">please fix the above errors</p>
+                                <p className="p-2 m-0">please fix the above errors first</p>
                             </div>
                             :null
                     }
                     <div className="w-50">
                     </div>
                     <div className="d-grid gap-2 w-25 mx-auto">
-                        <button className={["btn btn-success", !this.state.isValid?"disabled":""].join(" ")} disabled={!this.state.isValid} onClick={this.addTask}>Add Task</button>
+                        <button className={["btn btn-success", !this.state.isValid?"disabled":""].join(" ")}
+                                disabled={!this.state.isValid} onClick={this.addTask}>Add Task</button>
                     </div>
                 </div>
             </>

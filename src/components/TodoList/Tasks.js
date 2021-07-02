@@ -45,9 +45,13 @@ class Tasks extends Component {
                         <>
                             <div className={this.getClasses() + this.getClassColor(index)} key={"task"+index}>
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <p>Title: <strong>{task.name}</strong></p>
                                         <p>created at: <strong>{task.created_at}</strong></p>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <p>description</p>
+                                        <span>{task.description}</span>
                                     </div>
                                     <div className="col-md-1 p-0">
                                         <EditTask task={task} updateTasks={this.getTasks} />
